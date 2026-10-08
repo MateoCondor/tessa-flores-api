@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESSA FLORES</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        TESSA CORPORATION
+    </header>
+    <p>Catalogo de flores</p>
+
+    <main>
+        <div class="container-header"><h2>Variedades de flores</h2></div>
+        <button id="refresh-button">Actualizar</button>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Color</th>
+                        <th>Precio Tallo</th>
+                        <th>Descripcion agronomica</th>
+                    </tr>
+                </thead>
+                <tbody id="flores-body">
+                    <tr>
+                        <td colspan="5">Cargando datos...</td>
+                    </tr>
+                </tbody>
+                    
+            </table>
+                
+        </div>
+    </main>
+
+    <script>
+        const floresBody = document.getElementById('flores-body');
+        const refreshButton = document.getElementById('refresh-button');
+
+        function escapeHTML(value)  {
+            return String(value ?? '').replace(/&/g, '&amp;')
+                                      .replace(/</g, '&lt;')
+                                      .replace(/>/g, '&gt;')
+                                      .replace(/"/g, '&quot;')
+                                      .replace(/'/g, '&#39;');                 
+        }
+
+        async function cargarFlores() {
+            floresBody.innerHTML = '<tr><td colspan="5">Cargando datos...</td></tr>';
+            try {
+                const response = await fetch('/flores');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los datos');
+                }
+                const flores = await response.json();
+
+                if (!array.isArray(flores) || flores.length === 0) {
+                    floresBody.innerHTML = '<tr><td colspan="5">No hay datos disponibles</td></tr>';
+                    return;
+                }
+
+                floresBody.innerHTML = '';
+                flores.forEach(flor => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${escapeHTML(flor.id)}</td>
+                        <td>${escapeHTML(flor.nombre)}</td>
+                        <td>${escapeHTML(flor.color)}</td>
+                        <td>${escapeHTML(flor.precio_tallo)}</td>
+                        <td>${escapeHTML(flor.descripcion_agronomica)}</td>
+                    `;
+                    floresBody.appendChild(row);
+                });
+            } catch (error) {
+                floresBody.innerHTML = `<tr><td colspan="5">Error al cargar los datos: ${escapeHTML(error.message)}</td></tr>`;
+            }
+        }
+        refreshButton.addEventListener('click', cargarFlores);
+        cargarFlores();
+        
+    </script>
+    
+</body>
+</html>
