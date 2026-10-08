@@ -3,6 +3,9 @@
 ### instalar paquetes
 npm install
 
+### variables de entorno
+crear .env y copiar de env.example
+
 ### iniciar el servidor
 npm start
 
