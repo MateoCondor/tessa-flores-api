@@ -70,7 +70,7 @@
                 }
                 const flores = await response.json();
 
-                if (!array.isArray(flores) || flores.length === 0) {
+                if (!Array.isArray(flores) || flores.length === 0) {
                     floresBody.innerHTML = '<tr><td colspan="5">No hay datos disponibles</td></tr>';
                     return;
                 }
